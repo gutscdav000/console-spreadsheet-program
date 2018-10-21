@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
 
 
-  char inName[] = "tests/test3.txt";
+  char inName[] = "tests/test0.txt";
   FILE *in = fopen(inName, "r");
   int dims[2];
   

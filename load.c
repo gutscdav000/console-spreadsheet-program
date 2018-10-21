@@ -9,59 +9,60 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
   int col = 0x41; // start at A (0x41 : 65)
   
   char temp[150];
-  // first char forces the cell to be read in the do while loop
-  int character, first_char = 1;
+  int character;
 
-
-  // read first char
-    character = fgetc(in);
     
   do {
-    
-    printf("%x ", character);
-    
-    // if character is TAB read until next \t or \n
-    if(character == 9 || first_char == 1) {
-      int i = 0;
-      // don't skip over first char
-      if(first_char == 1 && character != 9)
-	temp[i++] = ((char)character);
-      
-      while((character = fgetc(in)) != 9 && character != 10 && character != EOF) {
+
+    int i = 0;
+    // read chars into buffer
+    while((character = fgetc(in)) != 9 && character != 10 && character != EOF) {
 	temp[i++] = ((char)character);
       }
+    
+    // if character is TAB/NEWLINE read buffer into cell_t
+    if((character == 9 || character == 10) && (col_index < y && row_index < x)) {
+      
       // if temp has chars read them into input otherwise write #NAN
       if( i > 0)
-	sprintf(c[row_index][col_index]->input, "%d,%d\t%s", row_index,col_index, temp);
+	sprintf(c[row_index][col_index]->input, "%s", temp);
       else
 	sprintf(c[row_index][col_index]->input, "%s", "#NAN");
-      
+
+      //printf("%d,%d   %s\n", row_index, col_index,	\
+      //	     c[row_index][col_index]->input);
+
       // update indeces
       col_index++;
       col++;
-      first_char = 0;
     }
-    // if character is NEWLINE
+    
+    // if character is NEWLINE 
     if(character == 10) {
+      // fill remaining inputs when newline is called prematurely
+      while(col_index < y) {
+	sprintf(c[row_index][col_index]->input, "%s", "#NAN");
+	col_index++;
+      }
+
+
       //update indeces
       col_index = 0;
       col = 65 + col_index; // offset for capital letter
       row++;
       row_index++;
-      first_char = 1;
     }
 
-    character = fgetc(in);
   } while(character != EOF);
   printf("\nend of do while\n");
 
-  /*  for(int i = 0; i <= x; i++) {
-    for(int j = 0; j <= y; j++) {
-      printf("%s\n", c[i][j]->input);
+  for(int i = 0; i < x; i++) {
+    for(int j = 0; j < y; j++) {
+      printf("%d,%d\t%s\n", i, j,c[i][j]->input);
     }
     printf("\n");
-    }*/
-      
+  }
+  
 }
 
 
@@ -83,9 +84,10 @@ void get_dimensions(FILE *in, int* dimensions) {
       printf("%d ", character);
     }
 
-      //dimensions [x,y]
+  // save dimensions in array provided to function
+  //dimensions [x,y]
   dimensions[0] = num_rows;
-  dimensions[1] = max_cols;
+  dimensions[1] = max_cols + 1; // 1 more column than tab in file
 
 }
 
