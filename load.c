@@ -53,6 +53,9 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
       row_index++;
     }
 
+    // clear temp buffer
+    memset(temp, '\0', i);
+
   } while(character != EOF);
   printf("\nend of do while\n");
 
