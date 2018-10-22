@@ -8,4 +8,3 @@
 
 void load_file(FILE *in, int x, int y, cell_t *c[x][y]);
 void get_dimensions(FILE *in, int* dimesnions);
-

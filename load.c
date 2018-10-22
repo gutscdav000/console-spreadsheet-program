@@ -93,4 +93,3 @@ void get_dimensions(FILE *in, int* dimensions) {
   dimensions[1] = max_cols + 1; // 1 more column than tab in file
 
 }
-

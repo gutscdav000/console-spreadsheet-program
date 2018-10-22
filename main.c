@@ -61,6 +61,6 @@ int main(int argc, char *argv[]) {
       process_cell(table[i][j], rows, cols, table);
     }
   }
-  
+
   return 0;
 }

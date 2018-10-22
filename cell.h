@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <regex.h>
 
 typedef struct cell {
   char input[150];
@@ -19,3 +20,7 @@ typedef struct cell {
 #define char_to_row(c) (((int)c) - 48)
 
 char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim]);
+char* process_formula(char*, char*);
+int op_check(char c);
+int process_operand(char* c);
+int regex_match( const char *, const char *);

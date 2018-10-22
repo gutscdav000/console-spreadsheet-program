@@ -3,7 +3,7 @@ flags =  -g -ggdb -std=c99
 
 OBJ = main.o load.o cell.o
 
-
+# executible compilation
 spreadsheet: $(OBJ)
 	$(cc) -o $@ $^ $(flags) 
 
@@ -17,4 +17,11 @@ main.o: main.c
 
 clean:
 	rm -f *.o
-	rm -f spreadsheet
+	rm -f spreadsheet test
+
+# test suite compilation
+test: cell.o test_cell.o
+	$(cc) $(flags) -o test test_cell.o cell.o
+
+test_cell.o: test_cell.c
+	$(cc) -c $(flags) -o test_cell.o test_cell.c
