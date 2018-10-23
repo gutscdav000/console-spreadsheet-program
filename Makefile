@@ -20,8 +20,8 @@ clean:
 	rm -f spreadsheet test
 
 # test suite compilation
-test: cell.o test_cell.o
-	$(cc) $(flags) -o test test_cell.o cell.o
+test: cell.o test_cell.o load.o
+	$(cc) $(flags) -o test test_cell.o cell.o load.o
 
-test_cell.o: test_cell.c
+test_cell.o: test_cell.c 
 	$(cc) -c $(flags) -o test_cell.o test_cell.c
