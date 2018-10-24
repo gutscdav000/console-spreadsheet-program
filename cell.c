@@ -44,7 +44,6 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
   /////////////////////////////////////////
   // check for text???
   
-  printf("didn't match\n");
   return "0";
 }
 
@@ -89,7 +88,9 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
   //clear buffer
   memset(buff, '\0', 10);
 
+  int prev_op;
   while( op != 6) {
+    prev_op = op;
     // read until operation or null terminator
     while((op = op_check(cell->input[formPtr])) == 0) {
       buff[buffPtr] = cell->input[formPtr];
@@ -103,10 +104,12 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
     //buff =
     process_operand(buff, cell, row_dim, col_dim, c);
     if(strcmp("#NAN", buff) == 0) {
-    return "#NAN";
-  }
+      cell->hasOutput = 1;
+      strcpy(cell->output, buff);
+      return "#NAN";
+    }
     else if(strcmp("#ERROR", buff) == 0) {
-    return "#ERROR";
+      return "#ERROR";
     }
     else {
       operand2 = atoi(buff);
@@ -121,7 +124,7 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
     
     // answer = operand1 op operand2
     // if next op \0 return ans else return to second while
-    answer = process_op(op, operand2, answer);
+    answer = process_op(prev_op, operand2, answer);
   }
 
   sprintf(cell->output, "%d", answer);
@@ -183,23 +186,24 @@ char* process_operand(char* buffer, cell_t *cell, int row_dim, int col_dim, cell
   // is cell reference
   if(regex_match(buffer, "[A-Z][0-9]+") == 1) {
     // get letter
-    int row = char_to_row(buffer[0]);
+    int col = char_to_col(buffer[0]);
     // get number
     char temp[8];
     int ptr = 1;
     while(buffer[ptr] != '\0') {
-      temp[ptr] = buffer[ptr];
+      temp[ptr - 1] = buffer[ptr];
       ptr++;
     }
-    int col = atoi(temp);
+    int row = atoi(temp) - 1; // i 1 because it's an index
     //clear buff
     memset(temp, '\0', ptr);
     
     //process cell to get reference value
     // should be a char* must convert to number
-    //buffer =
     process_cell(c[row][col], row_dim, col_dim, c);
-    return buffer;
+    memset(buffer, '\0', ptr);
+    strcpy(buffer, c[row][col]->output);
+    return c[row][col]->output;
   }
   // is digit
   if(regex_match(buffer, "[0-9]+") == 1) {
