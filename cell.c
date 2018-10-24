@@ -60,10 +60,10 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
     buffPtr++;
     formPtr++;
   }
+  formPtr++;
   buff[buffPtr++] = '\0';
 
   // store operand1
-  ///operand_buff =
   process_operand(buff, cell, row_dim, col_dim, c);
   if(strcmp("#NAN", buff) == 0) {
     return "#NAN";
@@ -96,6 +96,7 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
       buffPtr++;
       formPtr++;
     }
+    formPtr++;
     buff[buffPtr++] = '\0';
     
     // store operand2
