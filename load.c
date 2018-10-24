@@ -93,3 +93,49 @@ void get_dimensions(FILE *in, int* dimensions) {
   dimensions[1] = max_cols + 1; // 1 more column than tab in file
 
 }
+
+int push_reference(char *ref) {
+
+  int ret = 0;
+  //if cache contains ref return true
+  if(contains(ref) == 1)
+    ret = 1;
+
+  //if cache is full resize
+  if(cachePtr >= cache_size) {
+    // copy cache
+    char **temp = malloc(sizeof(char) * DEFAULT_REF_SIZE * cache_size);
+    for(int i = 0; i < cache_size; i++) {
+      temp[i] = (char *)malloc(sizeof(char) * DEFAULT_REF_SIZE);
+      strcpy(temp[i], reference_cache[i]);
+    }
+    // resize reference_cache
+    free(reference_cache);
+    cache_size *= 2;
+    reference_cache = (const char **)realloc(temp, sizeof(char) * DEFAULT_REF_SIZE * cache_size);
+    free(temp);
+  }
+  
+  // insert ref into array
+  reference_cache[cachePtr] = (char*)malloc(sizeof(char) * DEFAULT_REF_SIZE);
+  strcpy(((char *)reference_cache[cachePtr]), ref);
+  cachePtr++;
+  
+}
+
+
+int contains(char *ref) {
+  for(int i = 0; i < cachePtr; i++) {
+    if(strcmp(reference_cache[i], ref) == 0)
+      return 1;
+  }
+  return 0;
+}
+
+void clear_cache() {
+  if(reference_cache)
+    free(reference_cache);
+  
+  cache_size = DEFAULT_CACHE_SIZE;
+  reference_cache = malloc(sizeof(char) * DEFAULT_REF_SIZE * cache_size); 
+}
