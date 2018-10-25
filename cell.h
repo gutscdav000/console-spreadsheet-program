@@ -22,7 +22,7 @@ typedef struct cell {
 char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr);
 void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr);
 int op_check(char c);
-char* process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr);
+int process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr);
 int regex_match( char *, char *);
 int process_op(int op, int operand, int answer);
 void get_cell_posn(char *ref, cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim]);

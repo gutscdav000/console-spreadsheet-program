@@ -54,9 +54,9 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
 }
 
 void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr) {
-  int answer, operand2, op, formPtr = formula[0] == '='? 1: 0, buffPtr = 0;
+  int answer, operand2, op, formPtr = formula[0] == '='? 1: 0, buffPtr = 0, isText = 0;
   char buff[150];
- 
+  char buff2[150];
   
   // read until operation or null terminator
   while((op = op_check(formula[formPtr])) == 0) {
@@ -67,15 +67,15 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
   
   formPtr++;
   if(op != 5) buff[buffPtr++] = '\0';
-
+  
   
   // if '(' : 5 recur
   if(op == 5) {
     
     while((op = op_check(formula[formPtr])) != 7) {
-	buff[buffPtr] = formula[formPtr];
-	buffPtr++, formPtr++;
-      }
+      buff[buffPtr] = formula[formPtr];
+      buffPtr++, formPtr++;
+    }
     op = op_check(formula[++formPtr]);
     formPtr++;
     buff[buffPtr++] = '\0';
@@ -83,10 +83,14 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
     process_formula(buff, row_dim, col_dim, c, ref_cache, cachePtr);
   }
   
-      
+  
   
   // store operand1
-  process_operand(buff, row_dim, col_dim, c, ref_cache, cachePtr);
+  isText = process_operand(buff, row_dim, col_dim, c, ref_cache, cachePtr);
+  if(isText == 1) {
+    strcpy(buff2, buff);
+  }
+  
   if(strcmp("#NAN", buff) == 0) {
     memset(formula, '\0', 150); 
     strcpy(formula, "#NAN");
@@ -100,19 +104,21 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
   else {
     answer = atoi(buff);
   }
-
+  
   // if null terminator has been reached
   if(op == 6) {
     memset(formula, '\0', 150);
-    sprintf(formula, "%d", answer);
+    
+    if(isText == 1)
+      sprintf(formula, "%s", buff);
+    else 
+      sprintf(formula, "%d", answer);
     return;
   }
   
-  //clear buffer
-  memset(buff, '\0', buffPtr);
   buffPtr = 0;
   //clear buffer
-  memset(buff, '\0', 10);
+  memset(buff, '\0', 150);
 
   
   
@@ -123,23 +129,24 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
     // read until operation or null terminator
     while((op = op_check(formula[formPtr])) == 0) {
       buff[buffPtr] = formula[formPtr];
-      buffPtr++;
-      formPtr++;
+      buffPtr++, formPtr++;
     }
+    
     formPtr++;
     if(op != 5) buff[buffPtr++] = '\0';
 
-    // if '(' : 5 recur
+    // recur on open paren: '('
     if(op == 5) {
-      
+
+      // while not close paren: ')'
       while((op = op_check(formula[formPtr])) != 7) {
 	buff[buffPtr] = formula[formPtr];
 	buffPtr++, formPtr++;
       }
+      
       buff[buffPtr++] = '\0';
       op = op_check(formula[++formPtr]);
-      //formPtr++;
-    
+      
       process_formula(buff, row_dim, col_dim, c, ref_cache, cachePtr);
     }
     
@@ -162,16 +169,29 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
     
     // if '(' : 5 recur
     
+    
+    if(isText == 1 && prev_op == 1) {
+      //copy second operand into first 
+      strcat(buff2, buff);
+    }
+    else {
+      // if next op \0 return ans else return to second while
+      answer = process_op(prev_op, operand2, answer);
+    }
+    
     //clear buffer
     memset(buff, '\0', buffPtr);
     buffPtr = 0;
-    
-    // answer = operand1 op operand2
-    // if next op \0 return ans else return to second while
-    answer = process_op(prev_op, operand2, answer);
-  }
 
-  sprintf(formula, "%d", answer);
+  }
+  
+  //clear return pointer
+  memset(formula, '\0', 150);
+  
+  if(isText == 1) // for text concatenation
+    sprintf(formula, "%s", buff2);
+  else //for numeric return types
+    sprintf(formula, "%d", answer);
 }
 
 int process_op(int op, int operand, int answer) {
@@ -225,7 +245,7 @@ int op_check(char c) {
   }
 }
 
-char* process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char **ref_cache, int *cachePtr) {
+int process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char **ref_cache, int *cachePtr) {
 
   // is cell reference
   if(regex_match(buffer, "[A-Z][0-9]+") == 1) {
@@ -245,20 +265,22 @@ char* process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim]
     // check for cyclical references ***
     if(push_reference(buffer, ref_cache, cachePtr) == 1) {
       strcpy(buffer, "#ERROR");
-      return "#ERROR";
+      return 0;
     }
     //process cell to get reference value
     process_cell(c[row][col], row_dim, col_dim, c, ref_cache, cachePtr);
     memset(buffer, '\0', ptr);
     strcpy(buffer, c[row][col]->output);
-    return c[row][col]->output;
+    return 0;
   }
   // is digit
   if(regex_match(buffer, "[0-9]+") == 1) {
-    return buffer;
+    return 0;
   }
   //is text
-  //if(regex_match(c, "[a-zA-Z]+") == 1)
+  if(regex_match(buffer, "[a-zA-Z]+") == 1) 
+    return 1;
+    
 }
 
 

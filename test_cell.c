@@ -40,7 +40,7 @@ int main(void) {
   //*x = 5;
   int ans;
 
-  
+  /*  
 char form3[] = "=(11+7)/2";
  process_formula(form3, 1, 1, temp, t, x);
  printf("%s\n", form3);
@@ -59,10 +59,27 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
  ans = atoi(form1);
  printf("recursive formula test %d %s\n", 1, ans == -6? "PASSED" : "FAILED");
   
-  
+  */
+
+  // test text concat
  
- 
- // test process formula & process cell
+  char string1[] = "hello+ +world!";
+  char string2[] = "Bitte+ +schön";
+  char string3[] = "漢字+汉字";
+
+  char ret[150];
+
+  process_formula(string1, 1, 1, temp, t, x);
+  printf("string test 1 %s\n", string1);
+
+  process_formula(string2, 1, 1, temp, t, x);
+  printf("string test 2 %s\n", string2);
+
+  process_formula(string3, 1, 1, temp, t, x);
+  printf("string test 3 %s\n", string3);
+
+
+  // test process formula & process cell
  
  char inName[] = "tests/test3.txt";
  FILE *in = fopen(inName, "r");
@@ -126,7 +143,7 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
     }
   }
 
-  
+  free(ref_cache);
 
 
   
