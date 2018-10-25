@@ -62,10 +62,12 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
   */
 
   // test text concat
- 
+
+  /*
   char string1[] = "hello+ +world!";
   char string2[] = "Bitte+ +schön";
   char string3[] = "漢字+汉字";
+  char string4[] = "=world+ + hello?";
 
   char ret[150];
 
@@ -77,7 +79,7 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
 
   process_formula(string3, 1, 1, temp, t, x);
   printf("string test 3 %s\n", string3);
-
+  */
 
   // test process formula & process cell
  

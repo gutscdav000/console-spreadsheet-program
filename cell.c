@@ -28,7 +28,7 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
   // check if it's an empty cell
   if(strcmp(cell->input,"#NAN") == 0) {
     cell->hasOutput = 1;
-    sprintf(cell->output, "%s", "#NAN");
+    sprintf(cell->output, "%s", "");
     printf("%s\n", cell->output);
     return cell->output;
   }
