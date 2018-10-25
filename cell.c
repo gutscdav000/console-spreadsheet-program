@@ -44,7 +44,6 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
     process_formula(formula, row_dim, col_dim, c, ref_cache, cachePtr);
     sprintf(cell->output, "%s", formula);
     cell->hasOutput = 1;
-    printf("it's a formula\n");
     return "0";
   }
   /////////////////////////////////////////
