@@ -55,7 +55,7 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
 
 void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr) {
   int answer, operand2, op, formPtr = formula[0] == '='? 1: 0, buffPtr = 0;
-  char buff[10];
+  char buff[150];
  
   
   // read until operation or null terminator
@@ -64,9 +64,27 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
     buffPtr++;
     formPtr++;
   }
+  
   formPtr++;
-  buff[buffPtr++] = '\0';
+  if(op != 5) buff[buffPtr++] = '\0';
 
+  
+  // if '(' : 5 recur
+  if(op == 5) {
+    
+    while((op = op_check(formula[formPtr])) != 7) {
+	buff[buffPtr] = formula[formPtr];
+	buffPtr++, formPtr++;
+      }
+    op = op_check(formula[++formPtr]);
+    formPtr++;
+    buff[buffPtr++] = '\0';
+    
+    process_formula(buff, row_dim, col_dim, c, ref_cache, cachePtr);
+  }
+  
+      
+  
   // store operand1
   process_operand(buff, row_dim, col_dim, c, ref_cache, cachePtr);
   if(strcmp("#NAN", buff) == 0) {
@@ -96,7 +114,7 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
   //clear buffer
   memset(buff, '\0', 10);
 
-  // if '(' : 5 recur
+  
   
 
   int prev_op;
@@ -109,7 +127,22 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
       formPtr++;
     }
     formPtr++;
-    buff[buffPtr++] = '\0';
+    if(op != 5) buff[buffPtr++] = '\0';
+
+    // if '(' : 5 recur
+    if(op == 5) {
+      
+      while((op = op_check(formula[formPtr])) != 7) {
+	buff[buffPtr] = formula[formPtr];
+	buffPtr++, formPtr++;
+      }
+      buff[buffPtr++] = '\0';
+      op = op_check(formula[++formPtr]);
+      //formPtr++;
+    
+      process_formula(buff, row_dim, col_dim, c, ref_cache, cachePtr);
+    }
+    
     
     // store operand2
     process_operand(buff, row_dim, col_dim, c, ref_cache, cachePtr);
@@ -144,16 +177,16 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
 int process_op(int op, int operand, int answer) {
   switch(op) {
   case 1:
-    return operand + answer;
+    return (int)(operand + answer);
     break;
   case 2:
-    return answer - operand;
+    return (int)(answer - operand);
     break;
   case 3:
-    return answer * operand;
+    return (int)(answer * operand);
     break;
   case 4:
-    return answer / operand;
+    return (int)(answer / operand);
     break;
   default:
     break;
@@ -181,6 +214,9 @@ int op_check(char c) {
     
   case '\0':
     return 6;
+    break;
+  case ')':
+    return 7;
     break;
     
   default:

@@ -1,5 +1,5 @@
 cc = gcc
-flags =  -g -ggdb -std=c99
+flags =  -g -ggdb -std=c99 #-fno-stack-protector
 
 OBJ = main.o load.o cell.o
 

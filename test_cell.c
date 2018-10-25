@@ -1,6 +1,7 @@
 #include "load.h"
 
-int main() {
+
+int main(void) {
 
   // test regex_match
   char str1[] = "A5";
@@ -25,18 +26,52 @@ int main() {
   // no match
   printf("regex test 8 %s\n", regex_match(str4, pattern2) == 0? "PASSED": "FAILED");
   printf("regex test 9 %s\n", regex_match("1", pattern2) == 1? "PASSED" : "FAILED");
+  
+  // test recursive formula processing
+  
+  cell_t * temp[5][5];// = malloc(sizeof(cell_t) * 25);
+  /*for(int i = 0; i < 5; i++)
+    for(int j = 0; j < 5; j++)
+      temp[i][j] = malloc(sizeof(cell_t));
+  */
+  
+  char **t;// = malloc(sizeof(char) * 5);
+  int* x;
+  //*x = 5;
+  int ans;
 
-
-  // test process formula & process cell
-
-  char inName[] = "tests/test3.txt";
-  FILE *in = fopen(inName, "r");
+  
+char form3[] = "=(11+7)/2";
+ process_formula(form3, 1, 1, temp, t, x);
+ printf("%s\n", form3);
+ ans = atoi(form3);
+ printf("recursive formula test %d %s\n", 3, ans == 9? "PASSED" : "FAILED");
+  
+ char form2[] = "=(11+7)/(8-6)";
+ process_formula(form2, 1, 1, temp, t, x);
+ printf("%s\n", form2);
+ ans = atoi(form2);
+printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
+  
+ char form1[] = "=5-(6+5)";
+ process_formula(form1, 1, 1, temp, t, x);
+ printf("%s\n", form1);
+ ans = atoi(form1);
+ printf("recursive formula test %d %s\n", 1, ans == -6? "PASSED" : "FAILED");
+  
+  
+ 
+ 
+ // test process formula & process cell
+ 
+ char inName[] = "tests/test3.txt";
+ FILE *in = fopen(inName, "r");
   int dims[2];
-
+  
   // get dimensions ( dims: [rows, cols] )
   if(in != NULL) {
-  get_dimensions(in, dims);
-  fclose(in);
+    get_dimensions(in, dims);
+    fclose(in);
   }
   else {
     printf("ERROR: the file didn't open!\n");
@@ -46,7 +81,7 @@ int main() {
   int rows = dims[0], cols = dims[1]; 
   printf("\nrow: %d, col: %d\n", rows, cols);
   /////////////////////////////////////////////
-
+  
   
   //create table sheet
   cell_t *table[rows][cols];
@@ -58,11 +93,11 @@ int main() {
     }
   }
   //////////////////////////////////////////////
-
-
+  
+  
   // load spreadsheet
   in = fopen(inName, "r");
-
+  
   if(in != NULL) {
     printf("loading. . .\n");
     load_file( in, rows, cols, table);
