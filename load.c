@@ -57,14 +57,6 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
     memset(temp, '\0', i);
 
   } while(character != EOF);
-  printf("\nend of do while\n");
-
-  for(int i = 0; i < x; i++) {
-    for(int j = 0; j < y; j++) {
-      printf("%d,%d\t%s\n", i, j,c[i][j]->input);
-    }
-    printf("\n");
-  }
   
 }
 
@@ -114,7 +106,7 @@ void get_dimensions(FILE *in, int* dimensions) {
 	max_cols = iter_cols > max_cols? iter_cols: max_cols;
 	iter_cols = 0;
       }
-      printf("%d ", character);
+      
     }
 
   // save dimensions in array provided to function

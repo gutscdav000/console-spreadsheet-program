@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
 
   
-  if(1argc == 3)
+  if(argc == 3)
     print_spreadsheet(outName, rows, cols, table);
   else
     print_spreadsheet('\0', rows, cols, table);

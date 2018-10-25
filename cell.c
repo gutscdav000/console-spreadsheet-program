@@ -13,14 +13,12 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
   if(integer > 0 || integer < 0) {
     cell->hasOutput = 1;
     sprintf(cell->output, "%d", integer);
-    printf("%s\n", cell->output);
     return cell->output;
   }
   // validate it's not an error if zero is returned
   else if(integer == 0 && strcmp(cell->input,"0") == 0) {
     cell->hasOutput = 1;
     sprintf(cell->output, "%s", "0");
-    printf("%s\n", cell->output);
     return cell->output;
   }// otherwise it was an erronious return 0
   //////////////////////////////////////////
@@ -29,7 +27,6 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
   if(strcmp(cell->input,"#NAN") == 0) {
     cell->hasOutput = 1;
     sprintf(cell->output, "%s", "");
-    printf("%s\n", cell->output);
     return cell->output;
   }
   //////////////////////////////////////////

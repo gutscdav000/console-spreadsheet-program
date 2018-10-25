@@ -63,10 +63,10 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
 
   // test text concat
 
-  /*
+  
   char string1[] = "hello+ +world!";
   char string2[] = "Bitte+ +schön";
-  char string3[] = "漢字+汉字";
+  //char string3[] = "漢字+汉字";
   char string4[] = "=world+ + hello?";
 
   char ret[150];
@@ -77,13 +77,16 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
   process_formula(string2, 1, 1, temp, t, x);
   printf("string test 2 %s\n", string2);
 
-  process_formula(string3, 1, 1, temp, t, x);
-  printf("string test 3 %s\n", string3);
-  */
+  //  process_formula(string3, 1, 1, temp, t, x);
+  //  printf("string test 3 %s\n", string3);
+
+  process_formula(string4, 1, 1, temp, t, x);
+  printf("string test 4 %s\n", string4);
+  
 
   // test process formula & process cell
  
- char inName[] = "tests/test3.txt";
+  /* char inName[] = "tests/test3.txt";
  FILE *in = fopen(inName, "r");
   int dims[2];
   
@@ -146,7 +149,7 @@ printf("recursive formula test %d %s\n", 2,  ans == 9? "PASSED" : "FAILED");
   }
 
   free(ref_cache);
-
+  */
 
   
   return 0;
