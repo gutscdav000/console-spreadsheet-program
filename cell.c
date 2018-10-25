@@ -37,9 +37,13 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
   if((cell->input)[0] == '=') {
     // call process formula function
     char cellRef[DEFAULT_REF_SIZE];
+    char formula[150];
+    sprintf(formula, "%s", cell->input);
     get_cell_posn(cellRef, cell, row_dim, col_dim, c);
     push_reference(cellRef, ref_cache, cachePtr);
-    process_formula(cell, row_dim, col_dim, c, ref_cache, cachePtr);
+    process_formula(formula, row_dim, col_dim, c, ref_cache, cachePtr);
+    sprintf(cell->output, "%s", formula);
+    cell->hasOutput = 1;
     printf("it's a formula\n");
     return "0";
   }
@@ -49,15 +53,14 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
   return "0";
 }
 
-char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr) {
-  int answer, operand2, op, formPtr = 1, buffPtr = 0;
+void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr) {
+  int answer, operand2, op, formPtr = formula[0] == '='? 1: 0, buffPtr = 0;
   char buff[10];
-  char operand_buff[10];
-  
+ 
   
   // read until operation or null terminator
-  while((op = op_check(cell->input[formPtr])) == 0) {
-    buff[buffPtr] = cell->input[formPtr];
+  while((op = op_check(formula[formPtr])) == 0) {
+    buff[buffPtr] = formula[formPtr];
     buffPtr++;
     formPtr++;
   }
@@ -65,16 +68,16 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
   buff[buffPtr++] = '\0';
 
   // store operand1
-  process_operand(buff, cell, row_dim, col_dim, c, ref_cache, cachePtr);
+  process_operand(buff, row_dim, col_dim, c, ref_cache, cachePtr);
   if(strcmp("#NAN", buff) == 0) {
-    cell->hasOutput = 1;
-    strcpy(cell->output, "#NAN");
-    return "#NAN";
+    memset(formula, '\0', 150); 
+    strcpy(formula, "#NAN");
+    return;
   }
   else if(strcmp("#ERROR", buff) == 0) {
-    cell->hasOutput = 1;
-    strcpy(cell->output, "#ERROR");
-    return "#ERROR";
+    memset(formula, '\0', 150);
+    strcpy(formula, "#ERROR");
+    return;
   }
   else {
     answer = atoi(buff);
@@ -82,24 +85,26 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
 
   // if null terminator has been reached
   if(op == 6) {
-    sprintf(cell->output, "%d", answer);
-    cell->hasOutput = 1;
-    return cell->output;
+    memset(formula, '\0', 150);
+    sprintf(formula, "%d", answer);
+    return;
   }
-  // if '(' : 5 recur
-
+  
   //clear buffer
   memset(buff, '\0', buffPtr);
   buffPtr = 0;
   //clear buffer
   memset(buff, '\0', 10);
 
+  // if '(' : 5 recur
+  
+
   int prev_op;
   while( op != 6) {
     prev_op = op;
     // read until operation or null terminator
-    while((op = op_check(cell->input[formPtr])) == 0) {
-      buff[buffPtr] = cell->input[formPtr];
+    while((op = op_check(formula[formPtr])) == 0) {
+      buff[buffPtr] = formula[formPtr];
       buffPtr++;
       formPtr++;
     }
@@ -107,17 +112,16 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
     buff[buffPtr++] = '\0';
     
     // store operand2
-    //buff =
-    process_operand(buff, cell, row_dim, col_dim, c, ref_cache, cachePtr);
+    process_operand(buff, row_dim, col_dim, c, ref_cache, cachePtr);
     if(strcmp("#NAN", buff) == 0) {
-      cell->hasOutput = 1;
-      strcpy(cell->output, buff);
-      return "#NAN";
+      memset(formula, '\0', 150);
+      strcpy(formula, buff);
+      return;
     }
     else if(strcmp("#ERROR", buff) == 0) {
-      cell->hasOutput = 1;
-      strcpy(cell->output, "#ERROR");
-      return "#ERROR";
+      memset(formula, '\0', 150);
+      strcpy(formula, "#ERROR");
+      return;
     }
     else {
       operand2 = atoi(buff);
@@ -128,17 +132,13 @@ char* process_formula(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim]
     //clear buffer
     memset(buff, '\0', buffPtr);
     buffPtr = 0;
-    memset(operand_buff, '\0', 10);
     
     // answer = operand1 op operand2
     // if next op \0 return ans else return to second while
     answer = process_op(prev_op, operand2, answer);
   }
 
-  sprintf(cell->output, "%d", answer);
-  cell->hasOutput = 1;
-  return cell->output;
-  
+  sprintf(formula, "%d", answer);
 }
 
 int process_op(int op, int operand, int answer) {
@@ -189,7 +189,7 @@ int op_check(char c) {
   }
 }
 
-char* process_operand(char* buffer, cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char **ref_cache, int *cachePtr) {
+char* process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char **ref_cache, int *cachePtr) {
 
   // is cell reference
   if(regex_match(buffer, "[A-Z][0-9]+") == 1) {
