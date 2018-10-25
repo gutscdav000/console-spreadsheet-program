@@ -29,7 +29,7 @@ int main() {
 
   // test process formula & process cell
 
-  char inName[] = "tests/test0.txt";
+  char inName[] = "tests/test3.txt";
   FILE *in = fopen(inName, "r");
   int dims[2];
 
@@ -77,10 +77,16 @@ int main() {
   // process cells
   
   printf("processing cells: row,col\n");
+
+  int cachePtr = 0;
+  char** ref_cache = NULL;
+  clear_cache(&ref_cache, &cachePtr);
+  
   for(int i = 0; i < rows; i++) {
     for(int j = 0; j < cols; j++) {
       printf("%d,%d\n", i, j);
-      process_cell(table[i][j], rows, cols, table);
+      process_cell(table[i][j], rows, cols, table, ref_cache, &cachePtr);
+      clear_cache(&ref_cache, &cachePtr);
       printf("output? %d \t %s\n", table[i][j]->hasOutput, table[i][j]->output);
     }
   }

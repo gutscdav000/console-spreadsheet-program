@@ -94,48 +94,35 @@ void get_dimensions(FILE *in, int* dimensions) {
 
 }
 
-int push_reference(char *ref) {
+int push_reference(char *ref, char** ref_cache, int *cachePtr) {
 
   int ret = 0;
   //if cache contains ref return true
-  if(contains(ref) == 1)
+  if(contains(ref, ref_cache, cachePtr) == 1)
     ret = 1;
 
-  //if cache is full resize
-  if(cachePtr >= cache_size) {
-    // copy cache
-    char **temp = malloc(sizeof(char) * DEFAULT_REF_SIZE * cache_size);
-    for(int i = 0; i < cache_size; i++) {
-      temp[i] = (char *)malloc(sizeof(char) * DEFAULT_REF_SIZE);
-      strcpy(temp[i], reference_cache[i]);
-    }
-    // resize reference_cache
-    free(reference_cache);
-    cache_size *= 2;
-    reference_cache = (const char **)realloc(temp, sizeof(char) * DEFAULT_REF_SIZE * cache_size);
-    free(temp);
-  }
   
   // insert ref into array
-  reference_cache[cachePtr] = (char*)malloc(sizeof(char) * DEFAULT_REF_SIZE);
-  strcpy(((char *)reference_cache[cachePtr]), ref);
-  cachePtr++;
-  
+  ref_cache[(*cachePtr)] = (char*)malloc(sizeof(char) * DEFAULT_REF_SIZE); 
+  strcpy(((char *)ref_cache[(*cachePtr)]), ref);
+  (*cachePtr)++;
+
+  return ret;
 }
 
 
-int contains(char *ref) {
-  for(int i = 0; i < cachePtr; i++) {
-    if(strcmp(reference_cache[i], ref) == 0)
+int contains(char *ref, char **ref_cache, int *cachePtr) {
+  for(int i = 0; i < *cachePtr; i++) {
+    if(strcmp(ref_cache[i], ref) == 0)
       return 1;
   }
   return 0;
 }
 
-void clear_cache() {
-  if(reference_cache)
-    free(reference_cache);
-  
-  cache_size = DEFAULT_CACHE_SIZE;
-  reference_cache = malloc(sizeof(char) * DEFAULT_REF_SIZE * cache_size); 
+void clear_cache(char ***ref_cache, int *ptr) {
+  if(*ref_cache != NULL)
+    free(*ref_cache);
+
+  *ptr = 0;
+  *ref_cache = (char**)malloc(sizeof(char) * DEFAULT_REF_SIZE * DEFAULT_CACHE_SIZE); 
 }
