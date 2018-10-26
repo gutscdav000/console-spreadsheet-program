@@ -5,8 +5,6 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
   
   
   int row_index = 0, col_index = 0;
-  int row = row_index + 1;
-  int col = 0x41; // start at A (0x41 : 65)
   
   char temp[150];
   int character;
@@ -33,9 +31,8 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
       //printf("%d,%d   %s\n", row_index, col_index,	\
       //	     c[row_index][col_index]->input);
 
-      // update indeces
+      // update index
       col_index++;
-      col++;
     }
     
     // if character is NEWLINE 
@@ -49,8 +46,6 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
 
       //update indeces
       col_index = 0;
-      col = 65 + col_index; // offset for capital letter
-      row++;
       row_index++;
     }
 

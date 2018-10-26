@@ -5,9 +5,9 @@
 
 // cell structure
 typedef struct cell {
-  char input[150];
-  char output[100];
-  int hasOutput;
+  char input[150]; //cell's input buffer written in load_file()
+  char output[100];//cell's output value written in process_cell()
+  int hasOutput;   // flag to check if output has been written, made true in process_cell()
 } cell_t;
 
 // Macros for converting characters to table indeces and visa versa
@@ -33,7 +33,7 @@ typedef struct cell {
  *@param: int *cachePtr - pointer to the variable maintaining the size of **ref_cache. used to check for cyclicle references
  * NOTE: this function sets cell->output and cell->hasOutput = 1. calls process_formula()
  */
-char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr);
+void process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char** ref_cache, int *cachePtr);
 
 /*purpose: this function processes formulas that are g
  *
