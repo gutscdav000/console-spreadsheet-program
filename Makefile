@@ -18,13 +18,9 @@ main.o: main.c
 clean:
 	rm -f *.o
 	rm -f spreadsheet test
-	rm tests/out*
-	rm tests/trash.txt
 
-# test suite compilation
-test: cell.o test_cell.o load.o
-	$(cc) $(flags) -o test test_cell.o cell.o load.o
-	./test
+# test suite 
+test: 
 	make
 	echo "test0.txt spreadsheet test\n"
 	./spreadsheet tests/in/test0.txt tests/out0.txt >> tests/trash.txt
@@ -55,6 +51,3 @@ test: cell.o test_cell.o load.o
 	rm tests/out*
 	rm tests/trash.txt
 
-
-test_cell.o: test_cell.c 
-	$(cc) -c $(flags) -o test_cell.o test_cell.c
