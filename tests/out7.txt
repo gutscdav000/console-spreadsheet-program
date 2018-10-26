@@ -1,2 +1,0 @@
-helloworld!	hello world	testingconcatenation?	
-bon dia!	como esta voce	buenas noches	
