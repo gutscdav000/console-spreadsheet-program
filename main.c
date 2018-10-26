@@ -6,9 +6,8 @@ int main(int argc, char *argv[]) {
    
   char inName[100];
   char outName[100];
-  //char inName[] = "tests/in/test4.txt";
-  //char outName[] = "tests/out4.txt";
 
+  // process input arguments
   if(argc == 2 || argc == 3) {
     
     sprintf(inName, "%s", argv[1]);
@@ -78,11 +77,12 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  //deallocate memory
   if(ref_cache != NULL)
     free(ref_cache);
 
 
-  
+  // output spreadsheet
   if(argc == 3)
     print_spreadsheet(outName, rows, cols, table);
   else

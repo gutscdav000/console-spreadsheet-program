@@ -62,36 +62,6 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
 }
 
 
-
-void print_spreadsheet(char *out, int rows, int cols, cell_t *c[rows][cols]) {
-  int fileOut;
-  FILE *f;
-  
-  if(out[0] == '\0') {
-    fileOut = 0;
-  }
-  else {
-    // file output
-    f = fopen(out, "w");
-    fileOut = 1;
-  }
-
-  for(int i = 0; i < rows; i++) {
-    for(int j = 0; j < cols; j++) {
-      printf("%s\t", c[i][j]->output);
-      if(fileOut == 1 && f != NULL)
-	fprintf(f,"%s\t", c[i][j]->output);
-    }
-    printf("\n");
-    if(fileOut == 1 && f != NULL)
-      fprintf(f,"\n");
-  }
-  
-  if(fileOut == 1)
-    fclose(f);
-}
-
-
 void get_dimensions(FILE *in, int* dimensions) {
   int max_cols = 0, num_rows = 0, iter_cols = 0;
   int character;
@@ -148,4 +118,34 @@ void clear_cache(char ***ref_cache, int *ptr) {
 
   *ptr = 0;
   *ref_cache = (char**)malloc(sizeof(char) * DEFAULT_REF_SIZE * DEFAULT_CACHE_SIZE); 
+}
+
+
+
+void print_spreadsheet(char *out, int rows, int cols, cell_t *c[rows][cols]) {
+  int fileOut;
+  FILE *f;
+  
+  if(out[0] == '\0') {
+    fileOut = 0;
+  }
+  else {
+    // file output
+    f = fopen(out, "w");
+    fileOut = 1;
+  }
+
+  for(int i = 0; i < rows; i++) {
+    for(int j = 0; j < cols; j++) {
+      printf("%s\t", c[i][j]->output);
+      if(fileOut == 1 && f != NULL)
+	fprintf(f,"%s\t", c[i][j]->output);
+    }
+    printf("\n");
+    if(fileOut == 1 && f != NULL)
+      fprintf(f,"\n");
+  }
+  
+  if(fileOut == 1)
+    fclose(f);
 }

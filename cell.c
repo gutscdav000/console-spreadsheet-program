@@ -43,9 +43,7 @@ char* process_cell(cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][co
     cell->hasOutput = 1;
     return "0";
   }
-  /////////////////////////////////////////
-  // check for text???
-  
+    
   return "0";
 }
 
@@ -163,7 +161,6 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
       operand2 = atoi(buff);
     }
     
-    // if '(' : 5 recur
     
     
     if(isText == 1 && prev_op == 1) {
@@ -190,24 +187,6 @@ void process_formula(char *formula, int row_dim, int col_dim, cell_t *c[row_dim]
     sprintf(formula, "%d", answer);
 }
 
-int process_op(int op, int operand, int answer) {
-  switch(op) {
-  case 1:
-    return (int)(operand + answer);
-    break;
-  case 2:
-    return (int)(answer - operand);
-    break;
-  case 3:
-    return (int)(answer * operand);
-    break;
-  case 4:
-    return (int)(answer / operand);
-    break;
-  default:
-    break;
-  }
-}
 
 int op_check(char c) {
 
@@ -240,6 +219,7 @@ int op_check(char c) {
     break;
   }
 }
+
 
 int process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][col_dim], char **ref_cache, int *cachePtr) {
 
@@ -279,7 +259,6 @@ int process_operand(char* buffer, int row_dim, int col_dim, cell_t *c[row_dim][c
     
 }
 
-
 int regex_match(char *str, char *pattern) {
 
   regex_t re;
@@ -297,6 +276,30 @@ int regex_match(char *str, char *pattern) {
     return 0; // no match
   
 }
+
+
+
+int process_op(int op, int operand, int answer) {
+  switch(op) {
+  case 1:
+    return (int)(operand + answer);
+    break;
+  case 2:
+    return (int)(answer - operand);
+    break;
+  case 3:
+    return (int)(answer * operand);
+    break;
+  case 4:
+    return (int)(answer / operand);
+    break;
+  default:
+    break;
+  }
+}
+
+
+
 
 void get_cell_posn(char *ref, cell_t *cell, int row_dim, int col_dim, cell_t *c[row_dim][col_dim]) {
 
