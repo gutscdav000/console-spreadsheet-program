@@ -41,6 +41,13 @@ test: cell.o test_cell.o load.o
 	echo "test4.txt spreadsheet test\n"
 	./spreadsheet tests/in/test4.txt tests/out4.txt >> tests/trash.txt
 	diff tests/sample_out/test4.txt tests/out4.txt
+	echo "test5.txt spreadsheet test\n"
+	./spreadsheet tests/in/test5.txt tests/out5.txt >> tests/trash.txt
+	diff tests/sample_out/test5.txt tests/out5.txt
+	echo "test6.txt spreadsheet test\n"
+	./spreadsheet tests/in/test6.txt tests/out6.txt >> tests/trash.txt
+	diff tests/sample_out/test6.txt tests/out6.txt
+
 
 	rm tests/out*
 	rm tests/trash.txt

@@ -1,0 +1,2 @@
+=hello+world!	=hello+ +world	=testing+(concatenation+?)
+=bon+ +dia!	=como+ +esta+ +voce	=buenas+ +noches
