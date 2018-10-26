@@ -4,19 +4,22 @@
 int main(int argc, char *argv[]) {
 
    
-  char inName[100];// = "tests/test3.txt";
+  char inName[100];
   char outName[100];
-   if(argc == 2 || argc == 3) {
-     
-     sprintf(inName, "%s", argv[1]);
-     if(argc == 3)
-       sprintf(outName, "%s", argv[2]);
+  //char inName[] = "tests/in/test4.txt";
+  //char outName[] = "tests/out4.txt";
+
+  if(argc == 2 || argc == 3) {
+    
+    sprintf(inName, "%s", argv[1]);
+    if(argc == 3)
+      sprintf(outName, "%s", argv[2]);
   }
   else {
     printf("ERROR: please enter the file to be parsed\n");
     return -1;
-    }
-   
+  }
+  
 
 
   FILE *in = fopen(inName, "r");
@@ -83,7 +86,7 @@ int main(int argc, char *argv[]) {
   if(argc == 3)
     print_spreadsheet(outName, rows, cols, table);
   else
-    print_spreadsheet('\0', rows, cols, table);
+    print_spreadsheet("\0", rows, cols, table);
   
   
   return 0;

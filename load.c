@@ -19,6 +19,7 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
     while((character = fgetc(in)) != 9 && character != 10 && character != EOF) {
 	temp[i++] = ((char)character);
       }
+    temp[i++] = '\0';
     
     // if character is TAB/NEWLINE read buffer into cell_t
     if((character == 9 || character == 10) && (col_index < y && row_index < x)) {
