@@ -87,7 +87,12 @@ int main(int argc, char *argv[]) {
     print_spreadsheet(outName, rows, cols, table);
   else
     print_spreadsheet("\0", rows, cols, table);
-  
+
+
+  // dealocate spreadsheet cells
+  for(int i = 0; i < rows; i++)
+    for(int j = 0; j < cols; j++)
+      free(table[i][j]);
   
   return 0;
 
