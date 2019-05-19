@@ -14,7 +14,7 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
 
     int i = 0;
     // read chars into buffer
-    while((character = fgetc(in)) != 9 && character != 10 && character != EOF && character < 160/*changed this too*/) {
+    while((character = fgetc(in)) != 9 && character != 10 && character != EOF) {
 	temp[i++] = ((char)character);
       }
     temp[i++] = '\0';

@@ -6,7 +6,7 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
   
   int row_index = 0, col_index = 0;
   
-  char temp[160]; // hey this was 150
+  char temp[150];
   int character;
 
     
@@ -14,9 +14,9 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
 
     int i = 0;
     // read chars into buffer
-    while((character = fgetc(in)) != 9 && character != 10 && character != EOF && character < 160/*changed this too*/) {
+    while((character = fgetc(in)) != 9 && character != 10 && character != EOF) {
 	temp[i++] = ((char)character);
-      }
+    }
     temp[i++] = '\0';
     
     // if character is TAB/NEWLINE read buffer into cell_t

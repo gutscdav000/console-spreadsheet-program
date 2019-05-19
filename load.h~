@@ -1,0 +1,77 @@
+include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include "cell.h"
+
+//prototypes
+
+/*purpose: this function loads a spreadsheet given an input file
+ *
+ *@param: FILE *in - pointer to the file to be loaded
+ *@param: int x - number of rows in the file
+ *@param: int y - number of columns in the file
+ *@param: cell_t *c[x][y] - pointer to the 2d-aray that will process
+ *                          the spreadsheet
+ */
+void load_file(FILE *in, int x, int y, cell_t *c[x][y]);
+
+
+
+/*purpose: this function provides the dimensions of a spreadsheet
+ *         given an input file and a pointer to an integer array
+ *
+ *@param: FILE *in - the pointer to the file who's dimensions are 
+ *                   to be found
+ *@param: int *dimensions - pointer to an integer array (int array[2]) into which the row,col values will be written
+ */
+void get_dimensions(FILE *in, int* dimesnions);
+
+/*purpose: checks for cyclicle reference errors when processing formulas
+ *
+ *@param: char *ref - cstring denoting the reference to be checked & inserted into ref_cache
+ *@param: char **ref_cache - pointer to the array storing the references for the current formula
+ *@param: int *cachePtr - pointer to the variable maintaining the size of **ref_cache
+ *@return: boolean(int) value for a cyclicle reference (e.g. return 1 IFF cyclicle ref otherwise 0)
+ * NOTE: this function calls contains function
+ */
+
+
+int push_reference(char *ref, char** ref_cache, int *cachePtr);
+
+/*purpose: this function searches ref_cache trying to match the current reference
+ *
+ *@param: char *ref - cstring denoting the reference to be checked
+ *@param: char **ref_cache - pointer to the array storing the references for the current formula
+ *@param: int *cachePtr - pointer to the variable maintaining the size of **ref_cache
+ *@return: a boolean(int) value if the reference is already in the array
+ */
+
+
+int contains(char *ref, char **ref_cache, int *cachePtr);
+
+/*purpose: allocates memory for the reference cache. it frees and reallocates memory if it has already been allocated
+ *
+ *@param: char ***ref_cache - pointer to the pointer pointing to the array storing the references for the current formula
+ *@param: int *ptr - pointer to the variable maintaining the size of **ref_cache
+ * NOTE: this function sets/resets the pointer to 0 and reallocates reference memory
+ */
+
+
+void clear_cache(char ***ref_cache, int *ptr);
+
+/*purpose: this function prints the processed spreadsheet output and can write the output to a file
+ *
+ *@param: char *out - the pointer to the file that the spreadsheet will be output to (IFF "\0" no file is output)
+ *@param: int rows - number of rows in the spreadsheet
+ *@param: int cols - number of columns in the spreadsheet
+ *@param: cell_t c[rows][cols] - the pointer to the 2d array containing the spreadsheet cells
+ */
+
+
+void print_spreadsheet(char *out, int rows, int cols, cell_t *c[rows][cols]);
+
+// variables for memory allocation
+#define DEFAULT_REF_SIZE 5
+#define DEFAULT_CACHE_SIZE 100

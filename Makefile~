@@ -5,14 +5,14 @@ OBJ = main.o load.o cell.o
 
 # executible compilation
 spreadsheet: $(OBJ)
-	$(cc) -o  $@ $^ $(flags) 
+	$(cc) -o -g $@ $^ $(flags) 
 
 cell.o: cell.h cell.c
-	$(cc) -c $(flags) cell.c -o cell.o
+	$(cc) -c -g $(flags) cell.c -o cell.o
 load.o: load.h load.c
-	$(cc) -c $(flags) load.c -o load.o
+	$(cc) -c -g $(flags) load.c -o load.o
 main.o: main.c
-	$(cc) -c $(flags) main.c -o main.o
+	$(cc) -c -g $(flags) main.c -o main.o
 
 
 clean:
