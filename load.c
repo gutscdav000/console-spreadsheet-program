@@ -14,7 +14,7 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
 
     int i = 0;
     // read chars into buffer
-    while((character = fgetc(in)) != 9 && character != 10 && character != EOF && character < 160/*changed this too*/) {
+    while((character = fgetc(in)) != 9 && character != 10 && character != EOF && i < 160) {
 	temp[i++] = ((char)character);
       }
     temp[i++] = '\0';
@@ -23,16 +23,19 @@ void load_file(FILE *in, int x, int y, cell_t *c[x][y]) {
     if((character == 9 || character == 10) && (col_index < y && row_index < x)) {
       
       // if temp has chars read them into input otherwise write #NAN
-      if( i > 0)
+      if( i > 0 && i <= 150)
 	sprintf(c[row_index][col_index]->input, "%s", temp);
-      else if(i > 150)
+      else if(i > 150) {
 	sprintf(c[row_index][col_index]->input, "%s", "#ERROR");
+	sprintf(c[row_index][col_index]->output, "%s", "#ERROR");
+	c[row_index][col_index]->hasOutput = 1;
+      }
       else
 	sprintf(c[row_index][col_index]->input, "%s", "#NAN");
-
+      
       //printf("%d,%d   %s\n", row_index, col_index,	\
       //	     c[row_index][col_index]->input);
-
+      
       // update index
       col_index++;
     }
